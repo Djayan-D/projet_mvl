@@ -21,7 +21,7 @@ library(EnvStats)
 library(tibble)
 library(moments)
 library(corrplot)
-# Vérifier que caret n'est pas chargé sinon ça fait buguer
+# ATTENTION : VÉRIFIER QUE CARET N'EST PAS CHARGÉ, SINON SOUCIS DE R2 (IL SE CHARGÉ AUTOMATIQUEMENT AU BON MOMENT)
 
 
 
@@ -451,7 +451,7 @@ shapiro.test(res_sqrt)
 
 #----- 1.7. Matrice de corrélation -----
 
-corrplot(cor(data_2), 
+corrplot::corrplot(cor(data_2), 
          method = "circle",
          type = "upper",
          col = colorRampPalette(c("#6D9EC1", "white", "#E46726"))(200),
@@ -580,8 +580,10 @@ validationplot(modelpcr,
                main = "Courbe de R² selon le nombre de composantes - PCR sans racine",
                estimate = "train")
 
+# ATTENTION : VÉRIFIER QUE CARET EST CHARGÉ AVANT PLS SINON CONFLITS
 
-# RMSEP
+
+# RMSE
 
 RMSEP(modelpcr,
       estimate = "train")
@@ -616,7 +618,7 @@ validationplot(modelpcr,
                estimate = "CV")
 
 
-# RMSEP
+# RMSE
 
 RMSEP(modelpcr,
       estimate = "CV")
@@ -652,7 +654,7 @@ validationplot(modelpcr,
                main = "Courbe de R² selon le nombre de composantes - PCR sans racine",
                estimate = "all")
 
-# RMSEP
+# RMSE
 
 RMSEP(modelpcr,
       estimate = "all")
@@ -699,7 +701,7 @@ validationplot(modelpcr_sqrt,
                estimate = "train")
 
 
-# RMSEP
+# RMSE
 
 RMSEP(modelpcr_sqrt,
       estimate = "train")
@@ -734,7 +736,7 @@ validationplot(modelpcr_sqrt,
                estimate = "CV")
 
 
-# RMSEP
+# RMSE
 
 RMSEP(modelpcr_sqrt,
       estimate = "CV")
@@ -768,7 +770,7 @@ validationplot(modelpcr_sqrt,
                main = "Courbe de R² selon le nombre de composantes - PCR sans racine",
                estimate = "all")
 
-# RMSEP
+# RMSE
 
 RMSEP(modelpcr_sqrt,
       estimate = "all")
@@ -845,14 +847,14 @@ ggplot(R2_table_test, aes(x = Composantes, y = R2)) +
 
 
 
-#- 2.4.1.4 RMSEP sur test -
+#- 2.4.1.4 RMSE sur test -
 
-# RMSEP global
+# RMSE global
 
 sqrt(mean((data_test_2$EnergyTotal - pred_pcr_test)^2))
 
 
-# RMSEP par composante
+# RMSE par composante
 
 RMSEP_par_comp_test <- sapply(1:k_opt_pcr, function(n) {
   pred <- predict(modelpcr, newdata = data_test_2, ncomp = n)
@@ -902,7 +904,7 @@ line_data <- data.frame(
 ggplot(comparison_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites)) +
   geom_point(color = "blue") +
   geom_line(data = line_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites), color = "red", linetype = "dashed") +
-  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles") +
+  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles PCR") +
   theme_minimal() +
   coord_fixed(ratio = 1)
 
@@ -944,14 +946,14 @@ ggplot(R2_table_train, aes(x = Composantes, y = R2)) +
 
 
 
-#- 2.4.1.8. RMSEP sur train -
+#- 2.4.1.8. RMSE sur train -
 
-# RMSEP global
+# RMSE global
 
 sqrt(mean((data_train_2$EnergyTotal - pred_pcr_train)^2))
 
 
-# RMSEP par composante
+# RMSE par composante
 
 RMSEP_par_comp_train <- sapply(1:k_opt_pcr, function(n) {
   pred <- predict(modelpcr, newdata = data_train_2, ncomp = n)
@@ -1001,7 +1003,7 @@ line_data <- data.frame(
 ggplot(comparison_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites)) +
   geom_point(color = "blue") +
   geom_line(data = line_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites), color = "red", linetype = "dashed") +
-  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles") +
+  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles PCR") +
   theme_minimal() +
   coord_fixed(ratio = 1)
 
@@ -1052,14 +1054,14 @@ ggplot(R2_table_test_sqrt, aes(x = Composantes, y = R2)) +
 
 
 
-#- 2.4.2.4. RMSEP sur test -
+#- 2.4.2.4. RMSE sur test -
 
-# RMSEP global
+# RMSE global
 
 sqrt(mean((data_test_2$EnergyTotal_sqrt - pred_pcr_test_sqrt)^2))
 
 
-# RMSEP par composante
+# RMSE par composante
 
 RMSEP_par_comp_test_sqrt <- sapply(1:k_opt_pcr_sqrt, function(n) {
   pred <- predict(modelpcr_sqrt, newdata = data_test_2, ncomp = n)
@@ -1078,7 +1080,7 @@ ggplot(RMSEP_table_test_sqrt, aes(x = Composantes, y = RMSEP)) +
 
 
 
-#- 2.4.2.5. RMSEP sur test -
+#- 2.4.2.5. RMSE sur test -
 
 # Créer le dataframe de comparaison
 
@@ -1109,7 +1111,7 @@ line_data <- data.frame(
 ggplot(comparison_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites)) +
   geom_point(color = "blue") +
   geom_line(data = line_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites), color = "red", linetype = "dashed") +
-  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles") +
+  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles PCR sqrt") +
   theme_minimal() +
   coord_fixed(ratio = 1)
 
@@ -1148,14 +1150,14 @@ ggplot(R2_table_train_sqrt, aes(x = Composantes, y = R2)) +
 
 
 
-#- 2.4.2.8. RMSEP sur train -
+#- 2.4.2.8. RMSE sur train -
 
-# RMSEP global
+# RMSE global
 
 sqrt(mean((data_train_2$EnergyTotal_sqrt - pred_pcr_train_sqrt)^2))
 
 
-# RMSEP par composante
+# RMSE par composante
 
 RMSEP_par_comp_train_sqrt <- sapply(1:k_opt_pcr_sqrt, function(n) {
   pred <- predict(modelpcr_sqrt, newdata = data_train_2, ncomp = n)
@@ -1205,7 +1207,7 @@ line_data <- data.frame(
 ggplot(comparison_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites)) +
   geom_point(color = "blue") +
   geom_line(data = line_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites), color = "red", linetype = "dashed") +
-  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles") +
+  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles PCR sqrt") +
   theme_minimal() +
   coord_fixed(ratio = 1)
 
@@ -1215,7 +1217,9 @@ ggplot(comparison_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites)) +
 
 #- 2.4.2.10. Prédiction sur le jeu de test avec lm -
 
-# Sans racine
+library(caret)
+
+# Sans racine - Test
 
 mod_lm <- lm(EnergyTotal ~ . -EnergyTotal_sqrt, data = data_train_2)
 
@@ -1228,7 +1232,19 @@ rmsep_lm <- sqrt(mean((data_test_2$EnergyTotal - predictions)^2))
 rmsep_lm
 
 
-# Avec racine
+# Sans racine - CV
+
+ctrl <- trainControl(method = "cv", number = 10)
+
+mod_cv_lm <- train(EnergyTotal ~ . -EnergyTotal_sqrt,
+                   data = data_train_2,
+                   method = "lm",
+                   trControl = ctrl)
+
+mod_cv_lm$results
+
+
+# Avec racine - Test
 
 mod_lm_sqrt <- lm(EnergyTotal_sqrt ~ . -EnergyTotal, data = data_train_2)
 
@@ -1241,10 +1257,17 @@ rmsep_lm_sqrt <- sqrt(mean((data_test_2$EnergyTotal_sqrt - predictions_sqrt)^2))
 rmsep_lm_sqrt
 
 
+# Avec racine - CV
+
+mod_cv_lm_sqrt <- train(EnergyTotal_sqrt ~ . -EnergyTotal,
+                        data = data_train_2,
+                        method = "lm",
+                        trControl = ctrl)
+
+mod_cv_lm_sqrt$results
 
 
-
-
+detach("package:caret", unload = TRUE)
 
 
 
@@ -1263,7 +1286,7 @@ rmsep_lm_sqrt
 
 #---------- 3. PLS : RÉGRESSION PAR MOINDRES CARRÉS PARTIELS ----------
 
-#------ 3.1. Appliquer la PCR -----
+#------ 3.1. Appliquer la PLS -----
 
 #--- 3.1.1. Sans racine ---
 
@@ -1301,7 +1324,7 @@ validationplot(modelpls,
                estimate = "train")
 
 
-# RMSEP
+# RMSE
 
 RMSEP(modelpls,
       estimate = "train")
@@ -1309,7 +1332,7 @@ RMSEP(modelpls,
 validationplot(modelpls,
                val.type="RMSEP",
                type="b",
-               main = "Courbe de R² selon le nombre de composantes - PLS sans racine",
+               main = "Courbe de RMSEP selon le nombre de composantes - PLS sans racine",
                estimate = "train")
 
 
@@ -1336,7 +1359,7 @@ validationplot(modelpcr,
                estimate = "CV")
 
 
-# RMSEP
+# RMSE
 
 RMSEP(modelpls,
       estimate = "CV")
@@ -1344,7 +1367,7 @@ RMSEP(modelpls,
 validationplot(modelpls,
                val.type="RMSEP",
                type="b",
-               main = "Courbe de R² selon le nombre de composantes - PCR sans racine",
+               main = "Courbe de RMSEP selon le nombre de composantes - PCR sans racine",
                estimate = "CV")
 
 
@@ -1372,7 +1395,7 @@ validationplot(modelpls,
                main = "Courbe de R² selon le nombre de composantes - PLS sans racine",
                estimate = "all")
 
-# RMSEP
+# RMSE
 
 RMSEP(modelpls,
       estimate = "all")
@@ -1380,7 +1403,7 @@ RMSEP(modelpls,
 validationplot(modelpls,
                val.type="RMSEP",
                type="b",
-               main = "Courbe de R² selon le nombre de composantes - PLS sans racine",
+               main = "Courbe de RMSEP selon le nombre de composantes - PLS sans racine",
                estimate = "all")
 
 
@@ -1421,7 +1444,7 @@ validationplot(modelpls_sqrt,
                estimate = "train")
 
 
-# RMSEP
+# RMSE
 
 RMSEP(modelpls_sqrt,
       estimate = "train")
@@ -1429,7 +1452,7 @@ RMSEP(modelpls_sqrt,
 validationplot(modelpls_sqrt,
                val.type="RMSEP",
                type="b",
-               main = "Courbe de R² selon le nombre de composantes - PCR sans racine",
+               main = "Courbe de RMSEP selon le nombre de composantes - PCR sans racine",
                estimate = "train")
 
 
@@ -1456,7 +1479,7 @@ validationplot(modelpls_sqrt,
                estimate = "CV")
 
 
-# RMSEP
+# RMSE
 
 RMSEP(modelpls_sqrt,
       estimate = "CV")
@@ -1464,7 +1487,7 @@ RMSEP(modelpls_sqrt,
 validationplot(modelpls_sqrt,
                val.type="RMSEP",
                type="b",
-               main = "Courbe de R² selon le nombre de composantes - PCR sans racine",
+               main = "Courbe de RMSEP selon le nombre de composantes - PCR sans racine",
                estimate = "CV")
 
 
@@ -1490,7 +1513,7 @@ validationplot(modelpls_sqrt,
                main = "Courbe de R² selon le nombre de composantes - PCR sans racine",
                estimate = "all")
 
-# RMSEP
+# RMSE
 
 RMSEP(modelpls_sqrt,
       estimate = "all")
@@ -1566,14 +1589,14 @@ ggplot(R2_table_test, aes(x = Composantes, y = R2)) +
 
 
 
-#- 2.4.1.4 RMSEP sur test -
+#- 2.4.1.4 RMSE sur test -
 
-# RMSEP global
+# RMSE global
 
 sqrt(mean((data_test_2$EnergyTotal - pred_pls_test)^2))
 
 
-# RMSEP par composante
+# RMSE par composante
 
 RMSEP_par_comp_test <- sapply(1:k_opt_pls, function(n) {
   pred <- predict(modelpls, newdata = data_test_2, ncomp = n)
@@ -1623,7 +1646,7 @@ line_data <- data.frame(
 ggplot(comparison_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites)) +
   geom_point(color = "blue") +
   geom_line(data = line_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites), color = "red", linetype = "dashed") +
-  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles") +
+  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles PLS") +
   theme_minimal() +
   coord_fixed(ratio = 1)
 
@@ -1663,14 +1686,14 @@ ggplot(R2_table_train, aes(x = Composantes, y = R2)) +
 
 
 
-#- 2.4.1.8. RMSEP sur train -
+#- 2.4.1.8. RMSE sur train -
 
-# RMSEP global
+# RMSE global
 
 sqrt(mean((data_train_2$EnergyTotal - pred_pls_train)^2))
 
 
-# RMSEP par composante
+# RMSE par composante
 
 RMSEP_par_comp_train <- sapply(1:k_opt_pls, function(n) {
   pred <- predict(modelpls, newdata = data_train_2, ncomp = n)
@@ -1720,7 +1743,7 @@ line_data <- data.frame(
 ggplot(comparison_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites)) +
   geom_point(color = "blue") +
   geom_line(data = line_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites), color = "red", linetype = "dashed") +
-  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles") +
+  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles PLS") +
   theme_minimal() +
   coord_fixed(ratio = 1)
 
@@ -1772,14 +1795,14 @@ ggplot(R2_table_test_sqrt, aes(x = Composantes, y = R2)) +
 
 
 
-#- 2.4.2.4. RMSEP sur test -
+#- 2.4.2.4. RMSE sur test -
 
-# RMSEP global
+# RMSE global
 
 sqrt(mean((data_test_2$EnergyTotal_sqrt - pred_pls_test_sqrt)^2))
 
 
-# RMSEP par composante
+# RMSE par composante
 
 RMSEP_par_comp_test_sqrt <- sapply(1:k_opt_pls_sqrt, function(n) {
   pred <- predict(modelpls_sqrt, newdata = data_test_2, ncomp = n)
@@ -1798,7 +1821,7 @@ ggplot(RMSEP_table_test_sqrt, aes(x = Composantes, y = RMSEP)) +
 
 
 
-#- 2.4.2.5. RMSEP sur test -
+#- 2.4.2.5. Réel vs prévision sur test -
 
 # Créer le dataframe de comparaison
 
@@ -1829,7 +1852,7 @@ line_data <- data.frame(
 ggplot(comparison_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites)) +
   geom_point(color = "blue") +
   geom_line(data = line_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites), color = "red", linetype = "dashed") +
-  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles") +
+  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles PLS sqrt") +
   theme_minimal() +
   coord_fixed(ratio = 1)
 
@@ -1868,14 +1891,14 @@ ggplot(R2_table_train_sqrt, aes(x = Composantes, y = R2)) +
 
 
 
-#- 2.4.2.8. RMSEP sur train -
+#- 2.4.2.8. RMSE sur train -
 
-# RMSEP global
+# RMSE global
 
 sqrt(mean((data_train_2$EnergyTotal_sqrt - pred_pls_train_sqrt)^2))
 
 
-# RMSEP par composante
+# RMSE par composante
 
 RMSEP_par_comp_train_sqrt <- sapply(1:k_opt_pls_sqrt, function(n) {
   pred <- predict(modelpls_sqrt, newdata = data_train_2, ncomp = n)
@@ -1925,7 +1948,7 @@ line_data <- data.frame(
 ggplot(comparison_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites)) +
   geom_point(color = "blue") +
   geom_line(data = line_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites), color = "red", linetype = "dashed") +
-  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles") +
+  labs(x = "Valeurs Réelles", y = "Valeurs Prédites", title = "Comparaison entre les Valeurs Prédites et Réelles PLS sqrt") +
   theme_minimal() +
   coord_fixed(ratio = 1)
 
@@ -1933,5 +1956,11 @@ ggplot(comparison_data, aes(x = Vraies_Valeurs, y = Valeurs_Predites)) +
 
 
 
-#---- 2.5. Conclusion PLS -----
 
+
+#---------- 3. Comparaison des modèles ----------
+
+loadings(modelpcr)
+loadings(modelpcr_sqrt)
+loadings(modelpls)
+loadings(modelpls_sqrt)
